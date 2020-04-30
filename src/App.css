@@ -40,6 +40,11 @@
   font-size: 30px !important;
 }
 
+.info-header-mark {
+  margin: 2px !important;
+  background-color: yellow !important;
+}
+
 .my-field {
   display: flex;
   justify-content: center;
