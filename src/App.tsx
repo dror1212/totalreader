@@ -11,7 +11,6 @@ import axios from "axios";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
-const stands = 16;
 const values = [9, 18, 27, 35];
 const mark = [0, 0.5, 1.0, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
@@ -19,8 +18,7 @@ interface Iprops {}
 
 interface Istate {
   link: string;
-  stats: { name: string; level: string }[];
-  name: string[];
+  stats: { player: string; info: { name: string; level: string }[] }[];
   chose: number;
   filter: boolean;
 }
@@ -31,7 +29,6 @@ class App extends Component<Iprops, Istate> {
     this.state = {
       link: "",
       stats: [],
-      name: [],
       chose: 8,
       filter: false,
     };
@@ -60,8 +57,8 @@ class App extends Component<Iprops, Istate> {
         let follower = 0;
         const find = "data-age";
         const findAfter = `name="`;
-        const temp = this.state.stats;
-        const names: string[] = this.state.name;
+        let temp: { name: string; level: string }[] = [];
+        const info = this.state.stats;
         while (counter < responseText.length) {
           if (responseText[counter] === find[follower]) {
             follower++;
@@ -129,11 +126,13 @@ class App extends Component<Iprops, Istate> {
               counter++;
             }
             follower = 0;
-            names.push(name);
+            info.push({ player: name, info: temp });
+            name = "";
+            temp = [];
           }
           counter += 1;
         }
-        this.setState({ link: "", stats: temp, name: names });
+        this.setState({ link: "", stats: info });
       });
   }
 
@@ -167,7 +166,7 @@ class App extends Component<Iprops, Istate> {
           }
         }
         counter += 2;
-        const temp = this.state.stats;
+        const temp: { name: string; level: string }[] = [];
         if (counter < responseText.length - 1) {
           let level: string = "";
           let name: string = "";
@@ -188,9 +187,10 @@ class App extends Component<Iprops, Istate> {
             counter++;
           }
         }
-        const names = this.state.name;
-        names.push(name);
-        this.setState({ stats: temp, link: "", name: names });
+        const info = this.state.stats;
+        info.push({ player: name, info: temp });
+
+        this.setState({ stats: info, link: "" });
       });
   }
 
@@ -213,7 +213,7 @@ class App extends Component<Iprops, Istate> {
         </Header>
         <Button
           onClick={() => {
-            this.setState({ name: [], stats: [] });
+            this.setState({ stats: [] });
           }}
         >
           Delete All
@@ -279,40 +279,32 @@ class App extends Component<Iprops, Istate> {
           );
         })}
         <div className="player-info">
-          {this.state.name.map((name, index) => {
+          {this.state.stats.map((playerInformation) => {
             return !this.state.filter ||
-              this.calculateStars(
-                Number(this.state.stats[index * (stands - 1)].level)
-              ) >= this.state.chose ? (
+              this.calculateStars(Number(playerInformation.info[0].level)) >=
+                this.state.chose ? (
               <Card className="my-card">
                 <div>
                   <Header textAlign="center" className="info-name" size="small">
-                    {name}
+                    {playerInformation.player}
                   </Header>
                 </div>
-                {this.state.stats.map((position, offset) => {
-                  if (
-                    (index + 1) * (stands - 1) > offset &&
-                    index * (stands - 1) <= offset
-                  ) {
-                    return (
-                      <CardContent
-                        key={position.name}
-                        className={
-                          !this.state.filter &&
-                          this.state.chose ===
-                            this.calculateStars(Number(position.level))
-                            ? "info-header-mark"
-                            : "info-header"
-                        }
-                      >
-                        {position.name} : {position.level}, stars:{" "}
-                        {this.calculateStars(Number(position.level))}
-                      </CardContent>
-                    );
-                  } else {
-                    return null;
-                  }
+                {playerInformation.info.map((info) => {
+                  return (
+                    <CardContent
+                      key={info.name}
+                      className={
+                        !this.state.filter &&
+                        this.state.chose ===
+                          this.calculateStars(Number(info.level))
+                          ? "info-header-mark"
+                          : "info-header"
+                      }
+                    >
+                      {info.name} : {info.level}, stars:{" "}
+                      {this.calculateStars(Number(info.level))}
+                    </CardContent>
+                  );
                 })}
               </Card>
             ) : null;
