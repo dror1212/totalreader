@@ -261,6 +261,7 @@ class App extends Component<Iprops, Istate> {
         {mark.map((value) => {
           return (
             <Button
+              className="my-button"
               color={this.state.chose === value ? "yellow" : "red"}
               onClick={() => {
                 this.setState({ chose: value });

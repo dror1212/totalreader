@@ -63,3 +63,8 @@
   border: unset !important;
   text-align: center !important;
 }
+
+.my-button {
+  min-width: 70px !important;
+  margin: 5px !important;
+}
