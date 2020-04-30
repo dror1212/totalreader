@@ -235,7 +235,7 @@ class App extends Component<Iprops, Istate> {
   createInfoForPopup() {
     let info = "";
     mark.forEach((value, index) => {
-      info += `\n ${values[index]}-${values[index + 1]} : ${value} stars  , `;
+      info += `\n ${values[index]}-${values[index + 1]} : ${value}  , `;
     });
 
     info = info.slice(0, info.length - 4);
