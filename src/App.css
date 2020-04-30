@@ -1,0 +1,51 @@
+.my-tic-tac-toe {
+  align-items: center;
+  text-align: center;
+}
+
+.bottom-div {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.player-info {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#root {
+  min-height: 100vh;
+  background-image: url("../src/images/total.jpg");
+}
+
+.my-header {
+  padding-top: 15px !important;
+  color: black !important;
+  font-size: 54px !important;
+  max-width: 50vw;
+  position: relative;
+  left: 25vw;
+  font-weight: bolder;
+  border-radius: 72px;
+}
+
+.info-header {
+  max-width: 50vw;
+  position: relative;
+  left: 25vw;
+}
+
+.info-name {
+  font-size: 30px !important;
+}
+
+.my-field {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px !important;
+}
+
+.place {
+  margin: 7px !important;
+  font-family: monospace !important;
+}
