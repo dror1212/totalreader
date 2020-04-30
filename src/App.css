@@ -33,7 +33,9 @@
 }
 
 .info-header {
-  margin: 2px !important;
+  font-weight: bold;
+  border-color: transparent !important;
+  padding: 3px !important;
 }
 
 .info-name {
@@ -41,8 +43,10 @@
 }
 
 .info-header-mark {
-  margin: 2px !important;
   background-color: yellow !important;
+  border-color: yellow !important;
+  font-weight: bold;
+  padding: 3px !important;
 }
 
 .my-field {
@@ -67,4 +71,8 @@
 .my-button {
   min-width: 70px !important;
   margin: 5px !important;
+}
+
+.my-input {
+  max-width: 935px !important;
 }

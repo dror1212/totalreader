@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Button, Header, Input, Form, Card } from "semantic-ui-react";
+import {
+  Button,
+  Header,
+  Input,
+  Form,
+  Card,
+  CardContent,
+} from "semantic-ui-react";
 import axios from "axios";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
@@ -289,7 +296,7 @@ class App extends Component<Iprops, Istate> {
                     index * (stands - 1) <= offset
                   ) {
                     return (
-                      <Header
+                      <CardContent
                         key={position.name}
                         className={
                           !this.state.filter &&
@@ -298,11 +305,10 @@ class App extends Component<Iprops, Istate> {
                             ? "info-header-mark"
                             : "info-header"
                         }
-                        size="small"
                       >
                         {position.name} : {position.level}, stars:{" "}
                         {this.calculateStars(Number(position.level))}
-                      </Header>
+                      </CardContent>
                     );
                   } else {
                     return null;
