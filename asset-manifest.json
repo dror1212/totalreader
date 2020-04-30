@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/totalreader/static/css/main.a080d94b.chunk.css",
-    "main.js": "/totalreader/static/js/main.cb32b721.chunk.js",
-    "main.js.map": "/totalreader/static/js/main.cb32b721.chunk.js.map",
+    "main.css": "/totalreader/static/css/main.86b62869.chunk.css",
+    "main.js": "/totalreader/static/js/main.6cc15521.chunk.js",
+    "main.js.map": "/totalreader/static/js/main.6cc15521.chunk.js.map",
     "runtime-main.js": "/totalreader/static/js/runtime-main.e64fa60b.js",
     "runtime-main.js.map": "/totalreader/static/js/runtime-main.e64fa60b.js.map",
     "static/css/2.b772b29d.chunk.css": "/totalreader/static/css/2.b772b29d.chunk.css",
-    "static/js/2.2ee8faff.chunk.js": "/totalreader/static/js/2.2ee8faff.chunk.js",
-    "static/js/2.2ee8faff.chunk.js.map": "/totalreader/static/js/2.2ee8faff.chunk.js.map",
+    "static/js/2.d869923d.chunk.js": "/totalreader/static/js/2.d869923d.chunk.js",
+    "static/js/2.d869923d.chunk.js.map": "/totalreader/static/js/2.d869923d.chunk.js.map",
     "index.html": "/totalreader/index.html",
-    "precache-manifest.aee8d618c812b5c1276403a04a02a6b5.js": "/totalreader/precache-manifest.aee8d618c812b5c1276403a04a02a6b5.js",
+    "precache-manifest.61ffeb580413d4205999f968bdbc6687.js": "/totalreader/precache-manifest.61ffeb580413d4205999f968bdbc6687.js",
     "service-worker.js": "/totalreader/service-worker.js",
     "static/css/2.b772b29d.chunk.css.map": "/totalreader/static/css/2.b772b29d.chunk.css.map",
-    "static/css/main.a080d94b.chunk.css.map": "/totalreader/static/css/main.a080d94b.chunk.css.map",
-    "static/js/2.2ee8faff.chunk.js.LICENSE.txt": "/totalreader/static/js/2.2ee8faff.chunk.js.LICENSE.txt",
+    "static/css/main.86b62869.chunk.css.map": "/totalreader/static/css/main.86b62869.chunk.css.map",
+    "static/js/2.d869923d.chunk.js.LICENSE.txt": "/totalreader/static/js/2.d869923d.chunk.js.LICENSE.txt",
     "static/media/semantic.min.css": "/totalreader/static/media/outline-icons.ef60a4f6.woff",
     "static/media/App.css": "/totalreader/static/media/total.14831a51.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.e64fa60b.js",
     "static/css/2.b772b29d.chunk.css",
-    "static/js/2.2ee8faff.chunk.js",
-    "static/css/main.a080d94b.chunk.css",
-    "static/js/main.cb32b721.chunk.js"
+    "static/js/2.d869923d.chunk.js",
+    "static/css/main.86b62869.chunk.css",
+    "static/js/main.6cc15521.chunk.js"
   ]
 }
