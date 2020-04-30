@@ -6,12 +6,14 @@ import {
   Form,
   Card,
   CardContent,
+  Popup,
+  Icon,
 } from "semantic-ui-react";
 import axios from "axios";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
-const values = [9, 18, 27, 35];
+const values = [0, 9, 18, 27, 35, "??", "??", "??", "??", "??", "??", "??"];
 const mark = [0, 0.5, 1.0, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
 interface Iprops {}
@@ -219,14 +221,25 @@ class App extends Component<Iprops, Istate> {
   }
 
   calculateStars(power: number) {
-    let stars = 0;
+    let stars = -0.5;
     values.forEach((value) => {
-      if (power >= value) {
+      if (value === "??") {
+      } else if (power >= value) {
         stars += 0.5;
       }
     });
 
     return stars;
+  }
+
+  createInfoForPopup() {
+    let info = "";
+    mark.forEach((value, index) => {
+      info += `\n ${values[index]}-${values[index + 1]} : ${value} stars  , `;
+    });
+
+    info = info.slice(0, info.length - 4);
+    return info;
   }
 
   render() {
@@ -235,9 +248,20 @@ class App extends Component<Iprops, Istate> {
         <Header className="my-header" size="huge">
           Total Reader
         </Header>
+        <Popup
+          hoverable
+          basic
+          trigger={<Icon className="my-popup" name="info"></Icon>}
+        >
+          The numbers you will see after the players position are the value of
+          this player in this position, each value represent how many stars the
+          player deserve.
+          <br></br>
+          {this.createInfoForPopup()}
+        </Popup>
         <Button
           onClick={() => {
-            this.setState({ stats: [] });
+            this.setState({ stats: [], chose: 8 });
           }}
         >
           Delete All

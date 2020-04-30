@@ -49,6 +49,12 @@
   padding: 3px !important;
 }
 
+.my-popup {
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
 .my-field {
   display: flex;
   justify-content: center;
