@@ -1,7 +1,7 @@
 {
   "homepage": "http://dror1212.github.io/totalreader",
   "name": "totalreader",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
