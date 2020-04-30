@@ -18,7 +18,11 @@ interface Iprops {}
 
 interface Istate {
   link: string;
-  stats: { player: string; info: { name: string; level: string }[] }[];
+  stats: {
+    id: string;
+    player: string;
+    info: { name: string; level: string }[];
+  }[];
   chose: number;
   filter: boolean;
 }
@@ -57,6 +61,7 @@ class App extends Component<Iprops, Istate> {
         let follower = 0;
         const find = "data-age";
         const findAfter = `name="`;
+        const findAfter2 = `data-id="`;
         let temp: { name: string; level: string }[] = [];
         const info = this.state.stats;
         while (counter < responseText.length) {
@@ -73,6 +78,7 @@ class App extends Component<Iprops, Istate> {
             counter += 1;
             let level: string = "";
             let name: string = "";
+            let id: string = "";
             let status = true;
             while (responseText[counter] !== `"`) {
               if (responseText[counter] === ":") {
@@ -126,7 +132,24 @@ class App extends Component<Iprops, Istate> {
               counter++;
             }
             follower = 0;
-            info.push({ player: name, info: temp });
+            while (counter < responseText.length) {
+              if (responseText[counter] === findAfter2[follower]) {
+                follower++;
+              } else {
+                follower = 0;
+              }
+              if (follower === findAfter2.length) {
+                counter += 1;
+                while (responseText[counter] !== `"`) {
+                  id += responseText[counter];
+                  counter++;
+                }
+                break;
+              }
+              counter++;
+            }
+            follower = 0;
+            info.push({ id: id, player: name, info: temp });
             name = "";
             temp = [];
           }
@@ -140,6 +163,7 @@ class App extends Component<Iprops, Istate> {
     axios
       .get("https://cors-anywhere.herokuapp.com/" + this.state.link)
       .then((res) => {
+        const id = this.state.link.split("player/")[1].split("/"[0]);
         const responseText = res.data;
         let counter = 0;
         const find = "data-positions=";
@@ -188,7 +212,7 @@ class App extends Component<Iprops, Istate> {
           }
         }
         const info = this.state.stats;
-        info.push({ player: name, info: temp });
+        info.push({ id: id.join(""), player: name, info: temp });
 
         this.setState({ stats: info, link: "" });
       });
@@ -224,10 +248,9 @@ class App extends Component<Iprops, Istate> {
             if (temp > 0) {
               const help = this.state.link.split("/");
               help[help.length - 1] = "";
-              const full = help.join("/");
               if (
-                full === "https://www.total-football.org/player/" ||
-                full === "www.total-football.org/player/"
+                help[help.length - 2] === "player" ||
+                help[help.length - 3] === "player"
               ) {
                 this.readPage();
               } else if (help[help.length - 2] === "squad") {
@@ -284,11 +307,13 @@ class App extends Component<Iprops, Istate> {
               this.calculateStars(Number(playerInformation.info[0].level)) >=
                 this.state.chose ? (
               <Card className="my-card">
-                <div>
+                <a
+                  href={`https://www.total-football.org/player/${playerInformation.id}/`}
+                >
                   <Header textAlign="center" className="info-name" size="small">
                     {playerInformation.player}
                   </Header>
-                </div>
+                </a>
                 {playerInformation.info.map((info) => {
                   return (
                     <CardContent
