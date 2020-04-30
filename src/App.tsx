@@ -225,6 +225,11 @@ class App extends Component<Iprops, Istate> {
                 this.readPage();
               } else if (help[help.length - 2] === "squad") {
                 this.readTeam();
+              } else if (
+                help[help.length - 2] === "team" ||
+                help[help.length - 3] === "team"
+              ) {
+                this.readTeam(this.state.link + "/squad/");
               } else if (this.state.link === "All") {
                 this.try();
               }
