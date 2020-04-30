@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/totalreader/static/css/main.a080d94b.chunk.css",
-    "main.js": "/totalreader/static/js/main.e4e06928.chunk.js",
-    "main.js.map": "/totalreader/static/js/main.e4e06928.chunk.js.map",
+    "main.js": "/totalreader/static/js/main.cb32b721.chunk.js",
+    "main.js.map": "/totalreader/static/js/main.cb32b721.chunk.js.map",
     "runtime-main.js": "/totalreader/static/js/runtime-main.e64fa60b.js",
     "runtime-main.js.map": "/totalreader/static/js/runtime-main.e64fa60b.js.map",
     "static/css/2.b772b29d.chunk.css": "/totalreader/static/css/2.b772b29d.chunk.css",
     "static/js/2.2ee8faff.chunk.js": "/totalreader/static/js/2.2ee8faff.chunk.js",
     "static/js/2.2ee8faff.chunk.js.map": "/totalreader/static/js/2.2ee8faff.chunk.js.map",
     "index.html": "/totalreader/index.html",
-    "precache-manifest.55b1e1127e93434edb819dd226f237f2.js": "/totalreader/precache-manifest.55b1e1127e93434edb819dd226f237f2.js",
+    "precache-manifest.aee8d618c812b5c1276403a04a02a6b5.js": "/totalreader/precache-manifest.aee8d618c812b5c1276403a04a02a6b5.js",
     "service-worker.js": "/totalreader/service-worker.js",
     "static/css/2.b772b29d.chunk.css.map": "/totalreader/static/css/2.b772b29d.chunk.css.map",
     "static/css/main.a080d94b.chunk.css.map": "/totalreader/static/css/main.a080d94b.chunk.css.map",
@@ -22,6 +22,6 @@
     "static/css/2.b772b29d.chunk.css",
     "static/js/2.2ee8faff.chunk.js",
     "static/css/main.a080d94b.chunk.css",
-    "static/js/main.e4e06928.chunk.js"
+    "static/js/main.cb32b721.chunk.js"
   ]
 }
