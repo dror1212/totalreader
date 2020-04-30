@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7650c3ddf74556f677bc2835f5a587cc",
+    "revision": "354c910975c24624a6f783bcc1c6a1ea",
     "url": "/totalreader/index.html"
   },
   {
-    "revision": "990f78c17f1b9999afde",
+    "revision": "b848f2cd903cf476fc59",
     "url": "/totalreader/static/css/2.b772b29d.chunk.css"
   },
   {
-    "revision": "4764b6d11d82789d4d16",
-    "url": "/totalreader/static/css/main.3524ba3e.chunk.css"
+    "revision": "77566dff24eca54bfef7",
+    "url": "/totalreader/static/css/main.c94d9b41.chunk.css"
   },
   {
-    "revision": "990f78c17f1b9999afde",
-    "url": "/totalreader/static/js/2.7464dc8e.chunk.js"
+    "revision": "b848f2cd903cf476fc59",
+    "url": "/totalreader/static/js/2.2a671d27.chunk.js"
   },
   {
     "revision": "4d47ffde3dc69784e8e23fd910817ef8",
-    "url": "/totalreader/static/js/2.7464dc8e.chunk.js.LICENSE.txt"
+    "url": "/totalreader/static/js/2.2a671d27.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "4764b6d11d82789d4d16",
-    "url": "/totalreader/static/js/main.84f1abe1.chunk.js"
+    "revision": "77566dff24eca54bfef7",
+    "url": "/totalreader/static/js/main.931283d9.chunk.js"
   },
   {
     "revision": "a977526719d24377b6b9",
