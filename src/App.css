@@ -1,4 +1,4 @@
-.my-tic-tac-toe {
+.my-total-reader {
   align-items: center;
   text-align: center;
 }
@@ -11,6 +11,9 @@
 .player-info {
   padding-top: 15px;
   padding-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 #root {
@@ -30,9 +33,7 @@
 }
 
 .info-header {
-  max-width: 50vw;
-  position: relative;
-  left: 25vw;
+  margin: 2px !important;
 }
 
 .info-name {
@@ -48,4 +49,12 @@
 .place {
   margin: 7px !important;
   font-family: monospace !important;
+}
+
+.my-card {
+  min-width: 25vw;
+  margin: 15px !important;
+  background-color: transparent !important;
+  border: unset !important;
+  text-align: center !important;
 }
