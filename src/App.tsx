@@ -26,6 +26,7 @@ interface Istate {
   };
   chose: number;
   filter: boolean;
+  id: any;
 }
 
 class App extends Component<Iprops, Istate> {
@@ -36,6 +37,7 @@ class App extends Component<Iprops, Istate> {
       stats: {},
       chose: -1,
       filter: false,
+      id: null,
     };
   }
 
@@ -252,10 +254,9 @@ class App extends Component<Iprops, Istate> {
                 help[help.length - 3] === pages.team
               ) {
                 this.readTeam(this.state.link + pages.pageSquad);
-              } else if (this.state.link === pages.all) {
+              } /*else if (this.state.link === pages.all) {
                 this.try();
-              }
-              console.log(help);
+              }*/
             }
           }}
         >
