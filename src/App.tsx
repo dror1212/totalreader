@@ -12,19 +12,16 @@ import {
 import axios from "axios";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
-
-const values = [0, 9, 18, 27, 35, "??", "??", "??", "??", "??", "??", "??"];
-const mark = [0, 0.5, 1.0, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+import { values, mark } from "./Consts";
+import { Player, Position } from "./Models";
 
 interface Iprops {}
 
 interface Istate {
   link: string;
   stats: {
-    id: string;
-    player: string;
-    info: { name: string; level: string }[];
-  }[];
+    [playerId: string]: Player;
+  };
   chose: number;
   filter: boolean;
 }
@@ -34,7 +31,7 @@ class App extends Component<Iprops, Istate> {
     super(props);
     this.state = {
       link: "",
-      stats: [],
+      stats: {},
       chose: 8,
       filter: false,
     };
@@ -53,6 +50,58 @@ class App extends Component<Iprops, Istate> {
     }
   }
 
+  findInHtml(
+    find: string,
+    responseText: any,
+    counter: number,
+    endSign?: string
+  ) {
+    let follower = 0;
+    let newInfo = "";
+    const end = endSign ? endSign : `"`;
+    while (counter < responseText.length) {
+      if (responseText[counter] === find[follower]) {
+        follower++;
+      } else {
+        follower = 0;
+      }
+      if (follower === find.length) {
+        counter += 1;
+        while (responseText[counter] !== end) {
+          newInfo += responseText[counter];
+          counter++;
+        }
+        break;
+      }
+      counter++;
+    }
+
+    return { newInfo, counter };
+  }
+
+  getPositionsInfo(responseText: any, counter: number, temp: Position[]) {
+    let level: string = "";
+    let name: string = "";
+    let status = true;
+    while (responseText[counter] !== `"`) {
+      if (responseText[counter] === ":") {
+        status = false;
+      } else if (responseText[counter] === ",") {
+        status = true;
+        temp.push(new Position(name, level));
+        level = "";
+        name = "";
+      } else if (status) {
+        name += responseText[counter];
+      } else {
+        level += responseText[counter];
+      }
+      counter++;
+    }
+
+    return counter;
+  }
+
   async readTeam(loopLink?: string) {
     const str = loopLink ? loopLink : this.state.link;
     await axios
@@ -64,8 +113,9 @@ class App extends Component<Iprops, Istate> {
         const find = "data-age";
         const findAfter = `name="`;
         const findAfter2 = `data-id="`;
-        let temp: { name: string; level: string }[] = [];
+        let temp: Position[] = [];
         const info = this.state.stats;
+        let newDataFound;
         while (counter < responseText.length) {
           if (responseText[counter] === find[follower]) {
             follower++;
@@ -78,81 +128,29 @@ class App extends Component<Iprops, Istate> {
               counter -= 1;
             }
             counter += 1;
-            let level: string = "";
             let name: string = "";
             let id: string = "";
-            let status = true;
-            while (responseText[counter] !== `"`) {
-              if (responseText[counter] === ":") {
-                status = false;
-              } else if (responseText[counter] === ",") {
-                status = true;
-                temp.push({ name, level });
-                level = "";
-                name = "";
-              } else if (status) {
-                name += responseText[counter];
-              } else {
-                level += responseText[counter];
-              }
-              counter++;
-            }
+
+            counter = this.getPositionsInfo(responseText, counter, temp);
+
+            newDataFound = this.findInHtml(findAfter, responseText, counter);
+            name = newDataFound.newInfo + " ";
+            counter = newDataFound.counter;
+
+            newDataFound = this.findInHtml(findAfter, responseText, counter);
+            name = name + newDataFound.newInfo;
+            counter = newDataFound.counter;
+
+            newDataFound = this.findInHtml(findAfter2, responseText, counter);
+            id = newDataFound.newInfo;
+            counter = newDataFound.counter;
+
             follower = 0;
-            name = "";
-            while (counter < responseText.length) {
-              if (responseText[counter] === findAfter[follower]) {
-                follower++;
-              } else {
-                follower = 0;
-              }
-              if (follower === findAfter.length) {
-                counter += 1;
-                while (responseText[counter] !== `"`) {
-                  name += responseText[counter];
-                  counter++;
-                }
-                break;
-              }
-              counter++;
+            if (!info[id]) {
+              info[id] = { playerName: name, info: temp };
+            } else {
+              console.log(name + " is already exist");
             }
-            follower = 0;
-            name += " ";
-            while (counter < responseText.length) {
-              if (responseText[counter] === findAfter[follower]) {
-                follower++;
-              } else {
-                follower = 0;
-              }
-              if (follower === findAfter.length) {
-                counter += 1;
-                while (responseText[counter] !== `"`) {
-                  name += responseText[counter];
-                  counter++;
-                }
-                break;
-              }
-              counter++;
-            }
-            follower = 0;
-            while (counter < responseText.length) {
-              if (responseText[counter] === findAfter2[follower]) {
-                follower++;
-              } else {
-                follower = 0;
-              }
-              if (follower === findAfter2.length) {
-                counter += 1;
-                while (responseText[counter] !== `"`) {
-                  id += responseText[counter];
-                  counter++;
-                }
-                break;
-              }
-              counter++;
-            }
-            follower = 0;
-            info.push({ id: id, player: name, info: temp });
-            name = "";
             temp = [];
           }
           counter += 1;
@@ -161,63 +159,35 @@ class App extends Component<Iprops, Istate> {
       });
   }
 
-  readPage() {
-    axios
-      .get("https://cors-anywhere.herokuapp.com/" + this.state.link)
-      .then((res) => {
-        const id = this.state.link.split("player/")[1].split("/"[0]);
-        const responseText = res.data;
-        let counter = 0;
-        const find = "data-positions=";
-        let follower = 0;
-        const findName = "<title>";
-        let followerName = 0;
-        let name = "";
-        while (counter < responseText.length && follower + 1 !== find.length) {
-          if (responseText[counter] === find[follower]) {
-            follower++;
-          } else {
-            follower = 0;
-          }
-          if (!name && responseText[counter] === findName[followerName]) {
-            followerName++;
-          } else {
-            followerName = 0;
-          }
-          counter += 1;
-          if (followerName + 1 === findName.length) {
-            while (responseText[++counter] !== "<") {
-              name += responseText[counter];
-            }
-          }
-        }
-        counter += 2;
-        const temp: { name: string; level: string }[] = [];
-        if (counter < responseText.length - 1) {
-          let level: string = "";
-          let name: string = "";
-          let status = true;
-          while (responseText[counter] !== `"`) {
-            if (responseText[counter] === ":") {
-              status = false;
-            } else if (responseText[counter] === ",") {
-              status = true;
-              temp.push({ name, level });
-              level = "";
-              name = "";
-            } else if (status) {
-              name += responseText[counter];
-            } else {
-              level += responseText[counter];
-            }
-            counter++;
-          }
-        }
-        const info = this.state.stats;
-        info.push({ id: id.join(""), player: name, info: temp });
+  async readPage() {
+    const id = this.state.link.split("player/")[1].split("/"[0]).join("");
+    const info = this.state.stats;
+    if (!info[id]) {
+      await axios
+        .get("https://cors-anywhere.herokuapp.com/" + this.state.link)
+        .then((res) => {
+          const responseText = res.data;
+          let counter = 0;
+          const find = "data-positions=";
+          const findName = "<title>";
+          let name = "";
+          let newDataFound;
+          const temp: Position[] = [];
 
-        this.setState({ stats: info, link: "" });
-      });
+          newDataFound = this.findInHtml(findName, responseText, counter, "<");
+          name = newDataFound.newInfo;
+          counter = newDataFound.counter;
+
+          newDataFound = this.findInHtml(find, responseText, counter);
+          counter = newDataFound.counter + 1;
+
+          counter = this.getPositionsInfo(responseText, counter, temp);
+          info[id] = { playerName: name, info: temp };
+        });
+    } else {
+      console.log(this.state.stats[id].playerName + " is already exist");
+    }
+    this.setState({ stats: info, link: "" });
   }
 
   calculateStars(power: number) {
@@ -261,7 +231,7 @@ class App extends Component<Iprops, Istate> {
         </Popup>
         <Button
           onClick={() => {
-            this.setState({ stats: [], chose: 8 });
+            this.setState({ stats: {}, chose: 8 });
           }}
         >
           Delete All
@@ -277,7 +247,10 @@ class App extends Component<Iprops, Istate> {
                 help[help.length - 3] === "player"
               ) {
                 this.readPage();
-              } else if (help[help.length - 2] === "squad") {
+              } else if (
+                help[help.length - 2] === "squad" ||
+                help[help.length - 3] === "squad"
+              ) {
                 this.readTeam();
               } else if (
                 help[help.length - 2] === "team" ||
@@ -315,6 +288,7 @@ class App extends Component<Iprops, Istate> {
         {mark.map((value) => {
           return (
             <Button
+              key={value}
               className="my-button"
               color={this.state.chose === value ? "yellow" : "red"}
               onClick={() => {
@@ -326,22 +300,22 @@ class App extends Component<Iprops, Istate> {
           );
         })}
         <div className="player-info">
-          {this.state.stats.map((playerInformation) => {
+          {Object.entries(this.state.stats).map((playerInfo) => {
             return !this.state.filter ||
-              this.calculateStars(Number(playerInformation.info[0].level)) >=
+              this.calculateStars(Number(playerInfo[1].info[0].level)) >=
                 this.state.chose ? (
               <Card className="my-card">
                 <a
-                  href={`https://www.total-football.org/player/${playerInformation.id}/`}
+                  href={`https://www.total-football.org/player/${playerInfo[0]}/`}
                 >
                   <Header textAlign="center" className="info-name" size="small">
-                    {playerInformation.player}
+                    {playerInfo[1].playerName}
                   </Header>
                 </a>
-                {playerInformation.info.map((info) => {
+                {playerInfo[1].info.map((info) => {
                   return (
                     <CardContent
-                      key={info.name}
+                      key={info.position + playerInfo[0]}
                       className={
                         !this.state.filter &&
                         this.state.chose ===
@@ -350,7 +324,7 @@ class App extends Component<Iprops, Istate> {
                           : "info-header"
                       }
                     >
-                      {info.name} : {info.level}, stars:{" "}
+                      {info.position} : {info.level}, stars:{" "}
                       {this.calculateStars(Number(info.level))}
                     </CardContent>
                   );
