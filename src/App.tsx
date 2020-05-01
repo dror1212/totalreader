@@ -14,6 +14,7 @@ import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 import { values, mark } from "./Consts";
 import { Player, Position } from "./Models";
+import { findData, mode, pages } from "./enums";
 
 interface Iprops {}
 
@@ -110,20 +111,17 @@ class App extends Component<Iprops, Istate> {
         const responseText = res.data;
         let counter = 0;
         let follower = 0;
-        const find = "data-age";
-        const findAfter = `name="`;
-        const findAfter2 = `data-id="`;
         let temp: Position[] = [];
         const info = this.state.stats;
         let newDataFound;
         while (counter < responseText.length) {
-          if (responseText[counter] === find[follower]) {
+          if (responseText[counter] === findData.age[follower]) {
             follower++;
           } else {
             follower = 0;
           }
-          if (follower + 1 === find.length) {
-            counter -= 10 + find.length;
+          if (follower + 1 === findData.age.length) {
+            counter -= 10 + findData.age.length;
             while (responseText[counter] !== `"`) {
               counter -= 1;
             }
@@ -133,15 +131,27 @@ class App extends Component<Iprops, Istate> {
 
             counter = this.getPositionsInfo(responseText, counter, temp);
 
-            newDataFound = this.findInHtml(findAfter, responseText, counter);
+            newDataFound = this.findInHtml(
+              findData.name,
+              responseText,
+              counter
+            );
             name = newDataFound.newInfo + " ";
             counter = newDataFound.counter;
 
-            newDataFound = this.findInHtml(findAfter, responseText, counter);
+            newDataFound = this.findInHtml(
+              findData.name,
+              responseText,
+              counter
+            );
             name = name + newDataFound.newInfo;
             counter = newDataFound.counter;
 
-            newDataFound = this.findInHtml(findAfter2, responseText, counter);
+            newDataFound = this.findInHtml(
+              findData.dataId,
+              responseText,
+              counter
+            );
             id = newDataFound.newInfo;
             counter = newDataFound.counter;
 
@@ -168,17 +178,24 @@ class App extends Component<Iprops, Istate> {
         .then((res) => {
           const responseText = res.data;
           let counter = 0;
-          const find = "data-positions=";
-          const findName = "<title>";
           let name = "";
           let newDataFound;
           const temp: Position[] = [];
 
-          newDataFound = this.findInHtml(findName, responseText, counter, "<");
+          newDataFound = this.findInHtml(
+            findData.title,
+            responseText,
+            counter,
+            "<"
+          );
           name = newDataFound.newInfo;
           counter = newDataFound.counter;
 
-          newDataFound = this.findInHtml(find, responseText, counter);
+          newDataFound = this.findInHtml(
+            findData.dataPosition,
+            responseText,
+            counter
+          );
           counter = newDataFound.counter + 1;
 
           counter = this.getPositionsInfo(responseText, counter, temp);
@@ -241,23 +258,22 @@ class App extends Component<Iprops, Istate> {
             let temp = this.state.link.length;
             if (temp > 0) {
               const help = this.state.link.split("/");
-              help[help.length - 1] = "";
               if (
-                help[help.length - 2] === "player" ||
-                help[help.length - 3] === "player"
+                help[help.length - 2] === pages.player ||
+                help[help.length - 3] === pages.player
               ) {
                 this.readPage();
               } else if (
-                help[help.length - 2] === "squad" ||
-                help[help.length - 3] === "squad"
+                help[help.length - 2] === pages.squad ||
+                help[help.length - 1] === pages.squad
               ) {
                 this.readTeam();
               } else if (
-                help[help.length - 2] === "team" ||
-                help[help.length - 3] === "team"
+                help[help.length - 2] === pages.team ||
+                help[help.length - 3] === pages.team
               ) {
-                this.readTeam(this.state.link + "/squad/");
-              } else if (this.state.link === "All") {
+                this.readTeam(this.state.link + pages.pageSquad);
+              } else if (this.state.link === pages.all) {
                 this.try();
               }
               console.log(help);
@@ -283,7 +299,7 @@ class App extends Component<Iprops, Istate> {
             this.setState({ filter: !this.state.filter });
           }}
         >
-          {this.state.filter ? "Filter" : "Mark"}
+          {this.state.filter ? mode.filter : mode.mark}
         </Button>
         {mark.map((value) => {
           return (
