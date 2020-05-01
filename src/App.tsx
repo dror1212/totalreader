@@ -12,9 +12,10 @@ import {
 import axios from "axios";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
-import { values, mark } from "./Consts";
+import { mark } from "./Consts";
 import { Player, Position } from "./Models";
 import { findData, mode, pages } from "./enums";
+import { calculateStars, createInfoForPopup } from "./Utils";
 
 interface Iprops {}
 
@@ -33,7 +34,7 @@ class App extends Component<Iprops, Istate> {
     this.state = {
       link: "",
       stats: {},
-      chose: 8,
+      chose: -1,
       filter: false,
     };
   }
@@ -207,28 +208,6 @@ class App extends Component<Iprops, Istate> {
     this.setState({ stats: info, link: "" });
   }
 
-  calculateStars(power: number) {
-    let stars = -0.5;
-    values.forEach((value) => {
-      if (value === "??") {
-      } else if (power >= value) {
-        stars += 0.5;
-      }
-    });
-
-    return stars;
-  }
-
-  createInfoForPopup() {
-    let info = "";
-    mark.forEach((value, index) => {
-      info += `\n ${values[index]}-${values[index + 1]} : ${value}  , `;
-    });
-
-    info = info.slice(0, info.length - 4);
-    return info;
-  }
-
   render() {
     return (
       <div className="my-total-reader">
@@ -244,11 +223,11 @@ class App extends Component<Iprops, Istate> {
           this player in this position, each value represent how many stars the
           player deserve.
           <br></br>
-          {this.createInfoForPopup()}
+          {createInfoForPopup()}
         </Popup>
         <Button
           onClick={() => {
-            this.setState({ stats: {}, chose: 8 });
+            this.setState({ stats: {}, chose: -1 });
           }}
         >
           Delete All
@@ -308,7 +287,9 @@ class App extends Component<Iprops, Istate> {
               className="my-button"
               color={this.state.chose === value ? "yellow" : "red"}
               onClick={() => {
-                this.setState({ chose: value });
+                this.setState({
+                  chose: this.state.chose === value ? -1 : value,
+                });
               }}
             >
               {value}
@@ -318,7 +299,7 @@ class App extends Component<Iprops, Istate> {
         <div className="player-info">
           {Object.entries(this.state.stats).map((playerInfo) => {
             return !this.state.filter ||
-              this.calculateStars(Number(playerInfo[1].info[0].level)) >=
+              calculateStars(Number(playerInfo[1].info[0].level)) >=
                 this.state.chose ? (
               <Card className="my-card">
                 <a
@@ -329,21 +310,21 @@ class App extends Component<Iprops, Istate> {
                   </Header>
                 </a>
                 {playerInfo[1].info.map((info) => {
-                  return (
+                  return !this.state.filter ||
+                    calculateStars(Number(info.level)) >= this.state.chose ? (
                     <CardContent
                       key={info.position + playerInfo[0]}
                       className={
                         !this.state.filter &&
-                        this.state.chose ===
-                          this.calculateStars(Number(info.level))
+                        this.state.chose === calculateStars(Number(info.level))
                           ? "info-header-mark"
                           : "info-header"
                       }
                     >
                       {info.position} : {info.level}, stars:{" "}
-                      {this.calculateStars(Number(info.level))}
+                      {calculateStars(Number(info.level))}
                     </CardContent>
-                  );
+                  ) : null;
                 })}
               </Card>
             ) : null;
