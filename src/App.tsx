@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
-import { mark } from "./Consts";
+import { mark, stands } from "./Consts";
 import { Player, Position } from "./Models";
 import { findData, mode, pages } from "./enums";
 import { calculateStars, createInfoForPopup } from "./Utils";
@@ -26,7 +26,8 @@ interface Istate {
   };
   chose: number;
   filter: boolean;
-  id: any;
+  standsFilter: { [stand: string]: any };
+  nameFilter: String;
 }
 
 class App extends Component<Iprops, Istate> {
@@ -37,21 +38,9 @@ class App extends Component<Iprops, Istate> {
       stats: {},
       chose: -1,
       filter: false,
-      id: null,
+      standsFilter: { counter: 0 },
+      nameFilter: ""
     };
-  }
-
-  async try() {
-    let i = 1;
-    while (i < 1945) {
-      try {
-        await this.readTeam(`https://www.total-football.org/team/${i}/squad/`);
-      } catch {
-        console.log(i);
-        break;
-      }
-      i += 1;
-    }
   }
 
   findInHtml(
@@ -211,6 +200,18 @@ class App extends Component<Iprops, Istate> {
   }
 
   render() {
+    const filterPlayers = Object.values(this.state.stats).filter(
+      (player: Player) => {
+        return (
+          player.playerName.slice(0, this.state.nameFilter.length).toLowerCase() ===
+            this.state.nameFilter.toLowerCase() &&
+          (!this.state.filter ||
+            calculateStars(Number(player.info[0].level)) >= this.state.chose) &&
+          (!this.state.standsFilter["counter"] ||
+            this.state.standsFilter[player.info[0].position])
+        );
+      }
+    );
     return (
       <div className="my-total-reader">
         <Header className="my-header" size="huge">
@@ -229,7 +230,14 @@ class App extends Component<Iprops, Istate> {
         </Popup>
         <Button
           onClick={() => {
-            this.setState({ stats: {}, chose: -1 });
+            this.setState({
+              stats: {},
+              chose: -1,
+              standsFilter: { counter: 0 },
+              link : "",
+              nameFilter: "",
+              filter: false,
+            });
           }}
         >
           Delete All
@@ -254,13 +262,11 @@ class App extends Component<Iprops, Istate> {
                 help[help.length - 3] === pages.team
               ) {
                 this.readTeam(this.state.link + pages.pageSquad);
-              } /*else if (this.state.link === pages.all) {
-                this.try();
-              }*/
+              }
             }
           }}
         >
-          <Form.Field className="my-field">
+          <Form.Field className="my-field flex">
             <Button color="twitter" type="submit">
               Submit
             </Button>
@@ -274,6 +280,16 @@ class App extends Component<Iprops, Istate> {
             />
           </Form.Field>
         </Form>
+          <Form.Field className="flex small-margin">
+            <Input
+              className="my-input"
+              value={this.state.nameFilter}
+              placeholder="Players name filter"
+              onChange={(e) => {
+                this.setState({ nameFilter: e.target.value });
+              }}
+            />
+          </Form.Field>
         <Button
           onClick={() => {
             this.setState({ filter: !this.state.filter });
@@ -297,8 +313,33 @@ class App extends Component<Iprops, Istate> {
             </Button>
           );
         })}
+        <div>
+          {stands.map((stand) => {
+            return (
+              <Button
+                key={stand}
+                className="my-button"
+                color={this.state.standsFilter[stand] ? "green" : "purple"}
+                onClick={() => {
+                  const temp = this.state.standsFilter;
+                  if (temp[stand]) {
+                    temp["counter"]--;
+                  } else {
+                    temp["counter"]++;
+                  }
+                  temp[stand] = !temp[stand];
+                  this.setState({
+                    standsFilter: temp,
+                  });
+                }}
+              >
+                {stand}
+              </Button>
+            );
+          })}
+        </div>
         <div className="player-info">
-          {Object.entries(this.state.stats).map((playerInfo) => {
+          {Object.entries(filterPlayers).map((playerInfo) => {
             return !this.state.filter ||
               calculateStars(Number(playerInfo[1].info[0].level)) >=
                 this.state.chose ? (

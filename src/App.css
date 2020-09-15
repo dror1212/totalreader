@@ -16,6 +16,10 @@
   justify-content: center;
 }
 
+.buttons-bottom {
+  padding-bottom: 20px;
+}
+
 #root {
   min-height: 100vh;
   background-image: url("../src/images/total.jpg");
@@ -56,9 +60,17 @@
 }
 
 .my-field {
+  margin-top: 25px !important;
+}
+
+.flex {
   display: flex;
   justify-content: center;
-  margin-top: 25px !important;
+}
+
+.small-margin {
+  margin-top: 8px;
+  margin-bottom: 5px;
 }
 
 .place {
@@ -75,7 +87,7 @@
 }
 
 .my-button {
-  min-width: 70px !important;
+  min-width: 75px !important;
   margin: 5px !important;
 }
 
