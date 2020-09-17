@@ -200,18 +200,6 @@ class App extends Component<Iprops, Istate> {
   }
 
   render() {
-    const filterPlayers = Object.values(this.state.stats).filter(
-      (player: Player) => {
-        return (
-          player.playerName.slice(0, this.state.nameFilter.length).toLowerCase() ===
-            this.state.nameFilter.toLowerCase() &&
-          (!this.state.filter ||
-            calculateStars(Number(player.info[0].level)) >= this.state.chose) &&
-          (!this.state.standsFilter["counter"] ||
-            this.state.standsFilter[player.info[0].position])
-        );
-      }
-    );
     return (
       <div className="my-total-reader">
         <Header className="my-header" size="huge">
@@ -339,10 +327,14 @@ class App extends Component<Iprops, Istate> {
           })}
         </div>
         <div className="player-info">
-          {Object.entries(filterPlayers).map((playerInfo) => {
-            return !this.state.filter ||
-              calculateStars(Number(playerInfo[1].info[0].level)) >=
-                this.state.chose ? (
+          {Object.entries(this.state.stats).map((playerInfo) => {
+            const player = playerInfo[1];
+            return (player.playerName.slice(0, this.state.nameFilter.length).toLowerCase() ===
+            this.state.nameFilter.toLowerCase() &&
+          (!this.state.filter ||
+            calculateStars(Number(player.info[0].level)) >= this.state.chose) &&
+          (!this.state.standsFilter["counter"] ||
+            this.state.standsFilter[player.info[0].position])) ? (
               <Card className="my-card">
                 <a
                   href={`https://www.total-football.org/player/${playerInfo[0]}/`}
